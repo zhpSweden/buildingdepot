@@ -1,6 +1,47 @@
 import requests
 from requests.auth import HTTPBasicAuth
 
+from mongoengine import *
+# connect('dataservice',
+#         host='127.0.0.1',
+#         port=27020)
+
+class Node(EmbeddedDocument):
+    name = StringField()
+    value = StringField()
+
+
+class Sensor(Document):
+    name = StringField(required=True, unique=True)
+    source_name = StringField()
+    source_identifier = StringField()
+
+    metadata = DictField()
+    building = StringField()
+    tags = ListField(EmbeddedDocumentField(Node))
+
+
+class SensorGroup(Document):
+    name = StringField(required=True, unique=True)
+    description = StringField()
+
+    building = StringField()
+    tags = ListField(EmbeddedDocumentField(Node))
+
+
+class UserGroup(Document):
+    name = StringField(required=True, unique=True)
+    description = StringField()
+
+    users = ListField(StringField())
+
+
+class Permission(Document):
+    user_group = StringField()
+    sensor_group = StringField()
+    permission = StringField()
+
+
 auth = HTTPBasicAuth('zhp@gmail.com', '1')
 
 
@@ -42,8 +83,20 @@ def post_timeseries(payload):
     url = 'http://127.0.0.1:5001/api/v0.0/sensor/31d3ed97-1575-4759-98ab-45b3902b6ac7/timeseries'
     print requests.post(url, json=payload, auth=auth).content
 
+
+def read_page():
+    url = 'http://127.0.0.1:5001/service/sensor'
+    requests.get(url)
+
 import time
+import urllib2
 s = time.time()
-post_timeseries({'timeseries': [{'2134': 45}]})
+# post_timeseries({'timeseries': [{'2134': 45}]})
+read_page()
+e = time.time()
+print e-s
+
+s = time.time()
+urllib2.urlopen('http://127.0.0.1:5001/service/sensor')
 e = time.time()
 print e-s

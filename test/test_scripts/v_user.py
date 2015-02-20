@@ -1,6 +1,7 @@
 import time
 import requests
 from requests.auth import HTTPBasicAuth
+import urllib2
 
 
 class Transaction(object):
@@ -14,7 +15,8 @@ class Transaction(object):
 
     def run(self):
         s = time.time()
-        requests.post(self.url, json=self.payload, auth=self.auth)
+        # requests.post(self.url, json=self.payload, auth=self.auth)
+        urllib2.urlopen('http://127.0.0.1:5001/service/sensor')
         e = time.time()
         self.custom_timers['Write Request'] = e-s
 

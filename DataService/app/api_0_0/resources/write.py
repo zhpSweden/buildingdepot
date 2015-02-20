@@ -63,8 +63,10 @@ class Write(Resource):
         # series_s = time()
         influx.write_points(data)
         # series_e = time()
-        #
+
+        # all_e = time()
         # print 'permission: ', permission_e - permission_s
         # print 'sub: ', sub_e - sub_s
         # print 'series: ', series_e - series_s
+        # print 'all: ', all_e-all_s
         return success()
